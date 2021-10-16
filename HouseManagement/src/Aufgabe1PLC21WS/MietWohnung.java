@@ -1,10 +1,10 @@
 package Aufgabe1PLC21WS;
 
 public class MietWohnung extends Wohnung{
-	private Integer mietkosten;
-	private Integer mieter;
+	private Double mietkosten;
+	private Double mieter;
 
-    public MietWohnung(Integer id, Double flaeche, Integer zimmeranzahl, Integer stockwerk, Integer baujahr, Integer PLZ, String strasse, Integer hausnummer, Integer top, Integer mietkosten, Integer mieter) {
+    public MietWohnung(Integer id, Double flaeche, Integer zimmeranzahl, Integer stockwerk, Integer baujahr, Integer PLZ, String strasse, Integer hausnummer, Integer top, Double mietkosten, Double mieter) {
         super(id, flaeche, zimmeranzahl, stockwerk, baujahr, PLZ, strasse, hausnummer, top);
         this.mietkosten = mietkosten;
         this.mieter = mieter;

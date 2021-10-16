@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public abstract class Wohnung implements Serializable
 {
-    class Adresse{
+    class Adresse implements Serializable{
         public Integer PLZ;
         public String strasse;
         public Integer hausnummer;
@@ -28,6 +28,7 @@ public abstract class Wohnung implements Serializable
                     "\nHausnummer:         " + hausnummer +
                     "\nTop:            " + top;
         }
+
     };
 
     private Integer id; //(Immobiliennummer - Zahl, eindeutig, aber nicht notwendigerweise fortlaufend)
@@ -38,7 +39,7 @@ public abstract class Wohnung implements Serializable
     private Adresse adresse; //(PLZ, Strasse, Hausnummer, Top)
 
     public Wohnung(Integer id, Double flaeche, Integer zimmeranzahl, Integer stockwerk, Integer baujahr, Integer PLZ, String strasse, Integer hausnummer, Integer top) {
-        if(baujahr > 2021 || stockwerk < 0)
+        if(baujahr < 0 ||baujahr > 2021 || stockwerk < 0 || zimmeranzahl < 0 || flaeche < 0 || hausnummer < 0 || top < 0)
             throw new IllegalArgumentException("Error: Parameter ungueltig");
 
         this.id = id;
@@ -51,7 +52,7 @@ public abstract class Wohnung implements Serializable
 
     Integer alter()
     {
-        return 2021-baujahr;
+        return 2021 - baujahr;
     }
 
     abstract Double gesamtKosten();
@@ -98,6 +99,23 @@ public abstract class Wohnung implements Serializable
 
     public void setAdresse(Adresse adresse) {
         this.adresse = adresse;
+    }
+
+    //get Adresse methods:
+    public Integer getPLZ() {
+        return adresse.PLZ;
+    }
+
+    public String getStrasse() {
+        return adresse.strasse;
+    }
+
+    public Integer getHausnummer() {
+        return adresse.hausnummer;
+    }
+
+    public Integer getTop() {
+        return adresse.top;
     }
 
     @Override

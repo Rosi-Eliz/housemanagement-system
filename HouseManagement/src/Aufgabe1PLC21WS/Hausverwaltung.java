@@ -49,8 +49,8 @@ public class Hausverwaltung {
         Integer hausnummer = Integer.parseInt(arguments.get(8));
         Integer top = Integer.parseInt(arguments.get(9));
 
-        Integer x = Integer.parseInt(arguments.get(10));
-        Integer y = Integer.parseInt(arguments.get(11));
+        Double x = Double.parseDouble(arguments.get(10));
+        Double y = Double.parseDouble(arguments.get(11));
         Wohnung wohnung = null;
 
         if(arguments.get(0).equals("MW")) {
@@ -59,7 +59,7 @@ public class Hausverwaltung {
             wohnung = new EigentumsWohnung(id, flaeche, zimmeranzahl, stockwerk, baujahr, PLZ, strasse, hausnummer, top, x, y);
         }
         hausverwaltungDAO.saveWohnung(wohnung);
-
+        System.out.println("Info: Wohnung " + wohnung.getId() + " added.");
     };
 
 	public void removeWohnung(Integer id){
@@ -68,6 +68,7 @@ public class Hausverwaltung {
         }catch(Exception e){
             System.out.println("Wohnung existiert nicht");
         }
+        System.out.println("Info: Wohnung " + id + " deleted.");
     };
 
     public Integer getTotalAmountWohnungen(){
@@ -75,14 +76,14 @@ public class Hausverwaltung {
     }
 
     public Double meanTotalCosts(){
-        Integer wohnungen = getTotalAmountWohnungen();
-        if(wohnungen > 0) {
+        Integer wohnungenTotal = getTotalAmountWohnungen();
+        if(wohnungenTotal > 0) {
             Double totalCosts = hausverwaltungDAO.getWohnungen()
                     .stream()
                     .reduce(0.0, (subtotal, wohnung) -> subtotal + wohnung.gesamtKosten(),
                             (accumulatedDouble, costs) -> accumulatedDouble + costs);
 
-            return totalCosts / wohnungen;
+            return totalCosts / wohnungenTotal;
         }
         return 0.0;
     }

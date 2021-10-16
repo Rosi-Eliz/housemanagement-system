@@ -3,7 +3,7 @@ package Aufgabe1PLC21WS;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class HausverwaltungSerializationDAO implements HausverwaltungDAO {
 
@@ -19,8 +19,16 @@ public class HausverwaltungSerializationDAO implements HausverwaltungDAO {
         List<Wohnung> wohnungen = new ArrayList<>();
         try {
             ObjectInputStream reader;
+            File file = new File(fileName);
+            if(!file.exists())
+                return wohnungen;
             reader = new ObjectInputStream(new FileInputStream(fileName));
-            wohnungen = (List<Wohnung>) reader.readObject(); // unchecked
+            Wohnung object = (Wohnung) reader.readObject();
+            if(object != null)
+                wohnungen.add(object);
+            else
+                return wohnungen;
+            //wohnungen = (List<Wohnung>) reader.readObject(); // unchecked
             reader.close();
         } catch (Exception e) {
             System.err.println("Fehler bei Deserialisierung: " +
@@ -46,7 +54,6 @@ public class HausverwaltungSerializationDAO implements HausverwaltungDAO {
     public void saveWohnung(Wohnung wohnung) {
         if (!getWohnungen().contains(wohnung)) {
             File file = new File(fileName);
-
             try {
                 ObjectOutputStream writer = new ObjectOutputStream(new
                         FileOutputStream(fileName, true));

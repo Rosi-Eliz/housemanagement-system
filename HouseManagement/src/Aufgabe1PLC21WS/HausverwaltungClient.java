@@ -15,7 +15,7 @@ public class HausverwaltungClient {
 					hausverwaltung.allWohnungenDetails();
 					break;
 				case "add":
-					assert (args.size() == 1);
+					assert (args.size() == 12);
 					hausverwaltung.addWohnung(args);
 					break;
 				case "delete":
