@@ -3,6 +3,7 @@ package Aufgabe1PLC21WS;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Objects;
 import java.util.UUID;
 
 public abstract class Wohnung implements Serializable
@@ -23,9 +24,9 @@ public abstract class Wohnung implements Serializable
         @Override
         public String toString() {
             return
-                    "PLZ:           " + PLZ +
-                    "\nStrasse:            " + strasse +
-                    "\nHausnummer:         " + hausnummer +
+                    "PLZ:            " + PLZ +
+                    "\nStrasse:        " + strasse +
+                    "\nHausnummer:     " + hausnummer +
                     "\nTop:            " + top;
         }
 
@@ -123,12 +124,12 @@ public abstract class Wohnung implements Serializable
         String type = this instanceof MietWohnung ? "MW" : "EW";
         DecimalFormat df = Wohnung.getDecimalFormat();
         String flaecheFormatted = df.format(flaeche);
-        return  "Typ:                   " + type +
-                "\nId:                  " + id +
-                "\nFlaeche:             " + flaecheFormatted +
-                "\nZimmeranzahl:        " + zimmeranzahl +
-                "\nStockwerk:           " + stockwerk +
-                "\nBaujahr:             " + baujahr +
+        return  "Typ:            " + type +
+                "\nId:             " + id +
+                "\nFlaeche:        " + flaecheFormatted +
+                "\nZimmeranzahl:   " + zimmeranzahl +
+                "\nStockwerk:      " + stockwerk +
+                "\nBaujahr:        " + baujahr +
                 "\n" + adresse.toString() +
                 '\n';
     }
@@ -142,12 +143,11 @@ public abstract class Wohnung implements Serializable
 
     @Override
     public boolean equals(Object wohnung) {
-        if (wohnung == this)
-            return true;
+        return ((wohnung instanceof Wohnung) && this.id.equals(((Wohnung)wohnung).getId()));
+    }
 
-        if (!(wohnung instanceof Wohnung))
-            return false;
-
-        return this.id.equals(((Wohnung)wohnung).getId());
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, flaeche, zimmeranzahl, stockwerk, baujahr, adresse);
     }
 }

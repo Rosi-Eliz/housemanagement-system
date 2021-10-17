@@ -20,8 +20,8 @@ public class EigentumsWohnung extends Wohnung {
     @Override
     public String toString() {
         return  super.toString() +
-                "Betriebskosten:            " + betriebskosten +
+                "Betriebskosten: " + betriebskosten +
                 "\n" +
-                "Ruecklage:             " + reparaturruecklage;
+                "Ruecklage:      " + reparaturruecklage;
     }
 }

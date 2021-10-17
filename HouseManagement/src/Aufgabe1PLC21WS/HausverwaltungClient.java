@@ -23,8 +23,19 @@ public class HausverwaltungClient {
 					hausverwaltung.removeWohnung(Integer.parseInt(args.get(0)));
 					break;
 				case "count":
-					assert (args.isEmpty());
-					hausverwaltung.getTotalAmountWohnungen();
+					assert (args.size() < 2);
+					if(args.size() == 1)
+					{
+						switch(args.get(0))
+						{
+							case "MW" : hausverwaltung.getTotalAmountWohnungenMW(); break;
+							case "EW" : hausverwaltung.getTotalAmountWohnungenEW(); break;
+							default:
+								throw new UnsupportedOperationException("Does not support this operation!");
+						}
+					} else {
+						System.out.println(hausverwaltung.getTotalAmountWohnungen());
+					}
 					break;
 				case "meancosts":
 					assert (args.isEmpty());
@@ -51,13 +62,19 @@ public class HausverwaltungClient {
 		{
 			throw new IllegalArgumentException("Wrong number of arguments");
 		}
+		//String[] args = {"test.csv", "add", "EW", "1", "95", "3", "4", "1898", "1080", "Florianigasse", "42", "20", "1.55", "0.45"};
 
-		LinkedList<String> arguments = new LinkedList<String>(Arrays.asList(args));
-		String fileName = arguments.get(0);
-		String command = arguments.get(1);
-		arguments.subList(0, 2).clear();
-		HausverwaltungClient client = new HausverwaltungClient(fileName);
-		client.executeOperation(command, arguments);
+
+//		for(int i = 0; i < 2; i++)
+//		{
+			LinkedList<String> arguments = new LinkedList<String>(Arrays.asList(args));
+			String fileName = arguments.get(0);
+			String command = arguments.get(1);
+			arguments.subList(0, 2).clear();
+			HausverwaltungClient client = new HausverwaltungClient(fileName);
+			client.executeOperation(command, arguments);
+//		}
+
 	}
 	
 }

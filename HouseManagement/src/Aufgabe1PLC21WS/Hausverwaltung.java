@@ -13,26 +13,21 @@ public class Hausverwaltung {
         this.hausverwaltungDAO = hausverwaltungDAO;
     }
 
-    public String allWohnungenDetails(){
+    public void allWohnungenDetails(){
         List<Wohnung> wohnungen = hausverwaltungDAO.getWohnungen();
 
-        if(wohnungen.isEmpty())
-            return "Keine Wohnungen vorhanden";
-
-        StringBuffer buffer = new StringBuffer();
         wohnungen.forEach(wohnung -> {
-            buffer.append(wohnung.toString());
-            buffer.append("\n");
+            System.out.println(wohnung.toString());
+            System.out.println();
         });
-        return buffer.toString();
-    };
+    }
 
-    public String wohnungDetails(Integer id){
+    public void wohnungDetails(Integer id){
         Wohnung wohnung = hausverwaltungDAO.getWohnungbyId(id);
         if(wohnung != null)
-            return wohnung.toString();
-
-        return "Wohnung existiert nicht.";
+            System.out.print(wohnung.toString());
+        else
+            System.out.print("Wohnung existiert nicht.");
     }
 
     public void addWohnung(List<String> arguments){
@@ -75,7 +70,21 @@ public class Hausverwaltung {
         return hausverwaltungDAO.getWohnungen().size();
     }
 
-    public Double meanTotalCosts(){
+    public void getTotalAmountWohnungenEW(){
+        System.out.println(hausverwaltungDAO.getWohnungen()
+                .stream()
+                .filter(wohnung -> wohnung instanceof EigentumsWohnung)
+                .count());
+    }
+
+    public void getTotalAmountWohnungenMW(){
+        System.out.println(hausverwaltungDAO.getWohnungen()
+                .stream()
+                .filter(wohnung -> wohnung instanceof MietWohnung)
+                .count());
+    }
+
+    public void meanTotalCosts(){
         Integer wohnungenTotal = getTotalAmountWohnungen();
         if(wohnungenTotal > 0) {
             Double totalCosts = hausverwaltungDAO.getWohnungen()
@@ -83,30 +92,28 @@ public class Hausverwaltung {
                     .reduce(0.0, (subtotal, wohnung) -> subtotal + wohnung.gesamtKosten(),
                             (accumulatedDouble, costs) -> accumulatedDouble + costs);
 
-            return totalCosts / wohnungenTotal;
+            System.out.println(totalCosts / wohnungenTotal);
+        } else {
+            System.out.println(0);
         }
-        return 0.0;
     }
 
-    public String oldestWohnungenIDs(){
+    public void oldestWohnungenIDs(){
         List<Wohnung> wohnungen = new ArrayList<>(hausverwaltungDAO.getWohnungen());
 
-        if(getTotalAmountWohnungen() == 0)
-            return new String("Keine Wohnungen vorhanden");
-
+        if(getTotalAmountWohnungen().equals(0)) {
+            System.out.print("Keine Wohnungen vorhanden");
+            return;
+        }
         wohnungen.sort(Comparator.comparingInt(Wohnung::alter));
         Integer alter = wohnungen.get(wohnungen.size() - 1).alter();
         List<Integer> ids = wohnungen.stream().filter((Wohnung w) -> w.alter().equals(alter))
                 .map(Wohnung::getId)
                 .collect(Collectors.toList());
 
-        StringBuffer buffer = new StringBuffer();
         for(Integer id : ids)
         {
-            buffer.append("Id: ");
-            buffer.append(id.toString());
-            buffer.append("\n");
+            System.out.println("Id: " + id.toString());
         }
-        return buffer.toString();
     }
 }

@@ -8,28 +8,27 @@ import java.util.List;
 public class HausverwaltungSerializationDAO implements HausverwaltungDAO {
 
     private String fileName;
+    private List<Wohnung> wohnungenList;
 
     public HausverwaltungSerializationDAO(String fileName) {
         this.fileName = fileName;
+        wohnungenList = getWohnungen();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Wohnung> getWohnungen() {
         List<Wohnung> wohnungen = new ArrayList<>();
-        try {
-            ObjectInputStream reader;
-            File file = new File(fileName);
-            if(!file.exists())
-                return wohnungen;
-            reader = new ObjectInputStream(new FileInputStream(fileName));
-            Wohnung object = (Wohnung) reader.readObject();
+
+        File file = new File(fileName);
+        if(!file.exists())
+            return wohnungen;
+
+        try (InputStream inputStream = new FileInputStream(fileName);
+            ObjectInputStream reader = new ObjectInputStream(inputStream)) {
+            Object object = reader.readObject();
             if(object != null)
-                wohnungen.add(object);
-            else
-                return wohnungen;
-            //wohnungen = (List<Wohnung>) reader.readObject(); // unchecked
-            reader.close();
+                wohnungen.addAll((ArrayList<Wohnung>) object);
         } catch (Exception e) {
             System.err.println("Fehler bei Deserialisierung: " +
                     e.getMessage());
@@ -52,47 +51,48 @@ public class HausverwaltungSerializationDAO implements HausverwaltungDAO {
 
     @Override
     public void saveWohnung(Wohnung wohnung) {
-        if (!getWohnungen().contains(wohnung)) {
-            File file = new File(fileName);
+        if(!wohnungenList.contains(wohnung))
+        {
+            wohnungenList.add(wohnung);
             try {
-                ObjectOutputStream writer = new ObjectOutputStream(new
-                        FileOutputStream(fileName, true));
-                writer.writeObject(wohnung);
-                writer.close();
-            } catch (Exception e) {
-                System.err.println("Fehler bei Serialisierung: " +
-                        e.getMessage());
-                System.exit(1);
+                writeObjectsToFile(wohnungenList);
+            } catch(IOException e) {
+                wohnungenList.remove(wohnung);
+                System.err.println(e.getMessage());
             }
         } else {
-           throw new IllegalArgumentException("Error: Wohnung bereits vorhanden. (id= " + wohnung.getId() + ")");
+         throw new IllegalArgumentException("Error: Wohnung bereits vorhanden. (id= " + wohnung.getId() + ")");
         }
     }
 
     private void writeObjectsToFile(List<Wohnung> wohnungen) throws IOException {
-        try (OutputStream outputStream = new FileOutputStream(fileName);
+        try (FileOutputStream outputStream = new FileOutputStream(fileName);
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
             objectOutputStream.writeObject(wohnungen);
             objectOutputStream.flush();
-        }
+        }  catch (Exception e) {
+                System.err.println("Fehler bei Serialisierung: " +
+                        e.getMessage());
+                System.exit(1);
+            }
     }
 
     @Override
     public void deleteWohnung(int id) {
-        List<Wohnung> wohnungen = getWohnungen();
-        for (Wohnung wohnung : wohnungen) {
-            if (wohnung.getId().equals(id)) {
-                wohnungen.remove(wohnung);
+        Wohnung wohnung = getWohnungbyId(id);
+        if(wohnung != null){
                 try {
-                    writeObjectsToFile(wohnungen);
+                    wohnungenList.remove(wohnung);
+                    writeObjectsToFile(wohnungenList);
                 } catch (Exception e) {
                     System.err.println("Fehler bei Serialisierung: " +
                             e.getMessage());
+                    wohnungenList.add(wohnung);
                     System.exit(1);
                 }
                 return;
             }
-        }
-        throw new IllegalArgumentException("Error: Wohnung nicht vorhanden. (id= " + id + ")");
+        throw new IllegalArgumentException("Error: Wohnung nicht vorhanden. (id=" + id + ")");
     }
+
 }

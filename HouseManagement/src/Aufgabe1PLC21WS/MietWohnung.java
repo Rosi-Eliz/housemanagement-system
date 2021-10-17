@@ -24,8 +24,8 @@ public class MietWohnung extends Wohnung{
     @Override
     public String toString() {
         return  super.toString() +
-                "Miete / M2:            " + mietkosten +
+                "Miete/m2:       " + mietkosten +
                 "\n" +
-                "Anzahl Mieter:         " + mieter;
+                "Anzahl Mieter:  " + mieter;
     }
 }
