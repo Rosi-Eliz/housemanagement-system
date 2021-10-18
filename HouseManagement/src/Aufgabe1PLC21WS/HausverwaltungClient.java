@@ -12,7 +12,14 @@ public class HausverwaltungClient {
 		try {
 			switch (op) {
 				case "list":
-					hausverwaltung.allWohnungenDetails();
+					if(args.size() == 1)
+					{
+						hausverwaltung.wohnungDetails(Integer.parseInt(args.get(0)));
+					} else if(args.size() == 0){
+						hausverwaltung.allWohnungenDetails();
+					} else {
+						throw new IllegalArgumentException("Invalid arguments number");
+					}
 					break;
 				case "add":
 					assert (args.size() == 12);

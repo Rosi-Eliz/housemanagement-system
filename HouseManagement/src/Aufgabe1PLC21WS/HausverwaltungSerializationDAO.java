@@ -61,7 +61,7 @@ public class HausverwaltungSerializationDAO implements HausverwaltungDAO {
                 System.err.println(e.getMessage());
             }
         } else {
-         throw new IllegalArgumentException("Error: Wohnung bereits vorhanden. (id= " + wohnung.getId() + ")");
+            throw new IllegalArgumentException("Error: Wohnung bereits vorhanden. (id= " + wohnung.getId() + ")");
         }
     }
 
@@ -90,9 +90,8 @@ public class HausverwaltungSerializationDAO implements HausverwaltungDAO {
                     wohnungenList.add(wohnung);
                     System.exit(1);
                 }
-                return;
-            }
-        throw new IllegalArgumentException("Error: Wohnung nicht vorhanden. (id=" + id + ")");
+            } else {
+            throw new IllegalArgumentException("Error: Wohnung nicht vorhanden. (id=" + id + ")");
+        }
     }
-
 }

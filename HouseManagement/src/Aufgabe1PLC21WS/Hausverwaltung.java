@@ -1,5 +1,7 @@
 package Aufgabe1PLC21WS;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -84,6 +86,13 @@ public class Hausverwaltung {
                 .count());
     }
 
+    public static DecimalFormat getDecimalFormat()
+    {
+        DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
+        dfs.setDecimalSeparator('.');
+        return new DecimalFormat("0.00", dfs);
+    }
+
     public void meanTotalCosts(){
         Integer wohnungenTotal = getTotalAmountWohnungen();
         if(wohnungenTotal > 0) {
@@ -92,7 +101,9 @@ public class Hausverwaltung {
                     .reduce(0.0, (subtotal, wohnung) -> subtotal + wohnung.gesamtKosten(),
                             (accumulatedDouble, costs) -> accumulatedDouble + costs);
 
-            System.out.println(totalCosts / wohnungenTotal);
+            DecimalFormat df = Hausverwaltung.getDecimalFormat();
+            String costsFormatted = df.format(totalCosts / wohnungenTotal);
+            System.out.println(costsFormatted);
         } else {
             System.out.println(0);
         }
